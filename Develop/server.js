@@ -50,3 +50,7 @@ app.post("/api/notes", (req, res) => {
     })
 
 });
+
+// app.delete("/api/notes", (err, data) => {
+
+// })
