@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3030;
 
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
@@ -12,7 +12,8 @@ app.listen(PORT, () => {
     console.log("App listening on PORT " + PORT);
 });
 
-const notes = [];
+const jsonData = fs.readFileSync("./db/db.json");
+const parsedNote = JSON.parse(jsonData);
 
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "./public/index.html"));
@@ -31,19 +32,31 @@ app.get("/api/notes", (req, res) => {
     });
 });
 
+app.get("/api/notes/:id", (req, res) => {
+    const id = req.params.id;
+
+    // console.log(`note in the :id thing: ${jsonData}`);
+
+    for (let i = 0; i < parsedNote.length; i++) {
+        if (id === parsedNote[i].id) {
+            return res.json(parsedNote[i]);
+        }
+    }
+})
+
 app.post("/api/notes", (req, res) => {
     const newNote = req.body;
-    console.log(newNote);
-    // notes.push(newNote);
-    // console.log(notes)
-    // const savedNote = JSON.stringify(notes)
+
+    newNote.id = newNote.title.replace(/\s+/g, "").toLowerCase();
+    newNote.id = newNote.id + Math.floor(Math.random() * 1000);
+    // console.log(newNote.id);
     res.json(true);
 
     fs.readFile("./db/db.json", (err, data) => {
         if (err) throw err;
-        const note = JSON.parse(data)
-        note.push(newNote + ID);
-        fs.writeFile("./db/db.json", JSON.stringify(note), "utf8", function (err) {
+        let note = JSON.parse(data);
+        note.push(newNote);
+        fs.writeFile("./db/db.json", JSON.stringify(note), "utf8", (err) => {
             if (err) throw err;
             console.log(`success?`)
         });
@@ -51,6 +64,15 @@ app.post("/api/notes", (req, res) => {
 
 });
 
-// app.delete("/api/notes", (err, data) => {
+app.delete("/api/notes/:id", (req, res) => {
+    let deleteId = req.params.id;
+    let deleteObj = parsedNote.find(data => data.id == deleteId);
+    let deleteIndex = parsedNote.indexOf(deleteObj);
+    parsedNote.splice(deleteIndex, 1);
+    res.send(deleteObj);
 
-// })
+    fs.writeFile("./db/db.json", JSON.stringify(parsedNote), err => {
+        if (err) throw err;
+        console.log("did it work? who knows!")
+    })
+})
