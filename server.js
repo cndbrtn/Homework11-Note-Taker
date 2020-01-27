@@ -66,6 +66,7 @@ app.post("/api/notes", (req, res) => {
 
 app.delete("/api/notes/:id", (req, res) => {
     let deleteId = req.params.id;
+    console.log(`ID to be deleted: ${deleteId}`)
     let deleteObj = parsedNote.find(data => data.id == deleteId);
     let deleteIndex = parsedNote.indexOf(deleteObj);
     parsedNote.splice(deleteIndex, 1);
