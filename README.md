@@ -5,4 +5,4 @@
 * Got everything working but...
 
 ### Losses
-* delete function works fine on localhost but delets all objects in the arry when deployed on heroku. Will fix later
+* delete function works fine on localhost but deletes all objects in the arry when deployed on heroku. Will fix later
