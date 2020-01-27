@@ -2,7 +2,8 @@
 ## Homework Project 11
 
 ### Wins
-* Got everything working but...
+* Got everything working locally
+* Got everything working on heroku
+* Gained more confidence with express
 
-### Losses
-* delete function works fine on localhost but deletes all objects in the arry when deployed on heroku. Will fix later
+[Express App Deployed on Heroku](https://whispering-temple-42216.herokuapp.com/ "Deployed App")

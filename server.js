@@ -65,15 +65,20 @@ app.post("/api/notes", (req, res) => {
 });
 
 app.delete("/api/notes/:id", (req, res) => {
-    let deleteId = req.params.id;
-    console.log(`ID to be deleted: ${deleteId}`)
-    let deleteObj = parsedNote.find(data => data.id == deleteId);
-    let deleteIndex = parsedNote.indexOf(deleteObj);
-    parsedNote.splice(deleteIndex, 1);
-    res.send(deleteObj);
-
-    fs.writeFile("./db/db.json", JSON.stringify(parsedNote), err => {
+    fs.readFile("./db/db.json", (err, data) => {
         if (err) throw err;
-        console.log("did it work? who knows!")
+        const parsedNote = JSON.parse(data);
+        let deleteId = req.params.id;
+        console.log(`response: ${data}`)
+        console.log(`ID to be deleted: ${deleteId}`)
+        let deleteObj = parsedNote.find(data => data.id == deleteId);
+        let deleteIndex = parsedNote.indexOf(deleteObj);
+        parsedNote.splice(deleteIndex, 1);
+        res.send(deleteObj);
+
+        fs.writeFile("./db/db.json", JSON.stringify(parsedNote), err => {
+            if (err) throw err;
+            console.log("did it work? who knows!")
+        })
     })
 })
